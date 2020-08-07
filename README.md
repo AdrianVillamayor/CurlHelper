@@ -14,6 +14,14 @@ A simple class that helps to organize and have a standard when creating new proj
 ```php
 $curl = new CurlHelper();
 
+$fields = array(
+    'client_id' => '{app-id}',
+    'client_secret' => '{app-secret}',
+    'grant_type' => 'authorization_code',
+    'redirect_uri' => '{redirect-uri}',
+    'code' => '{code}'
+);
+
 $curl->perform_http_request("POST", $url, "json", $fields, true);
 
 $response   = $curl->response();
