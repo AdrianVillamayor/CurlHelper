@@ -172,9 +172,17 @@ class CurlHelper
         return $this->debug;
     }
 
-    public function response(): ?array
+    public function response($format = "obj): ?array
     {
-        $response = json_decode($this->response);
+         switch ($format) {
+            case 'obj':
+                $response = json_decode($this->response);
+                break;
+           
+            case 'array':
+                $response = json_decode($this->response, true);
+                break;
+        }
 
         if (json_last_error() == JSON_ERROR_NONE) {
             return (array) $response;
