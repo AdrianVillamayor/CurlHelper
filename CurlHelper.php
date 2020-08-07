@@ -172,7 +172,7 @@ class CurlHelper
         return $this->debug;
     }
 
-    public function response($format = "obj): ?array
+    public function response($format = "obj"): ?array
     {
          switch ($format) {
             case 'obj':
