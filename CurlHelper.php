@@ -186,11 +186,11 @@ class CurlHelper
     {
         switch ($format) {
             case 'obj':
-                $response = json_decode($this->response);
+                $response = json_decode($this->response, false, 512, JSON_BIGINT_AS_STRING);
                 break;
 
             case 'array':
-                $response = json_decode($this->response, true);
+                $response = json_decode($this->response, true, 512, JSON_BIGINT_AS_STRING);
                 break;
         }
 
