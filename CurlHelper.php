@@ -5,6 +5,7 @@
  * This class has all the necessary code for making API calls thru curl library
  * @category   Helper
  * @author     Original Author <adrian@socialdiabetes.com>
+ * @link       https://github.com/AdrianVillamayor/CurlHelper
  *
  */
 
@@ -29,6 +30,11 @@ class CurlHelper
      * @var null|string
      */
     protected $url;
+
+    /**
+     * @var string
+     */
+    protected $content_type;
 
     /**
      * @var array
@@ -80,9 +86,12 @@ class CurlHelper
      */
     public $debug;
 
-    const MIME_X_WWW_FORM   = 'application/x-www-form-urlencoded';
-    const MIME_FORM_DATA    = 'multipart/form-data';
-    const MIME_JSON         = 'application/json';
+    /**
+     * @var mixed
+     */
+    public $MIME_X_WWW_FORM   = 'application/x-www-form-urlencoded';
+    public $MIME_FORM_DATA    = 'multipart/form-data';
+    public $MIME_JSON         = 'application/json';
 
     /**
      * This method will perform an action/method thru HTTP/API calls
@@ -104,26 +113,26 @@ class CurlHelper
 
         switch ($mime) {
             case 'form':
-                $content_type =  $this->MIME_X_WWW_FORM;
+                $this->content_type =  $this->MIME_X_WWW_FORM;
                 break;
 
             case 'multipart':
-                $content_type =  $this->MIME_FORM_DATA;
+                $this->content_type =  $this->MIME_FORM_DATA;
                 break;
 
             case 'json':
-                $content_type =  $this->MIME_JSON;
+                $this->content_type =  $this->MIME_JSON;
                 $data = json_encode($data);
                 break;
 
             default:
-                $content_type =  $this->MIME_JSON;
+                $this->content_type =  $this->MIME_JSON;
                 break;
         }
 
         switch ($method) {
             case "POST":
-                curl_setopt($this->ch, CURLOPT_POST, 1);
+                curl_setopt($this->ch, CURLOPT_POST, true);
 
                 if (!empty($data)) {
                     curl_setopt($this->ch, CURLOPT_POSTFIELDS, $data);
@@ -131,7 +140,7 @@ class CurlHelper
                 break;
 
             case "PUT":
-                curl_setopt($this->ch, CURLOPT_PUT, 1);
+                curl_setopt($this->ch, CURLOPT_PUT, true);
                 break;
 
             default:
@@ -146,10 +155,11 @@ class CurlHelper
         curl_setopt($this->ch, CURLOPT_USERAGENT, $this->user_agent);
 
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: {$content_type}; charset=utf-8",
+            "Content-Type: {$this->content_type}; charset=utf-8 ;",
         ));
 
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
 
         $this->response = curl_exec($this->ch);
 
@@ -172,13 +182,13 @@ class CurlHelper
         return $this->debug;
     }
 
-    public function response($format = "obj"): ?array
+    public function response($format = 'array'): ?array
     {
-         switch ($format) {
+        switch ($format) {
             case 'obj':
                 $response = json_decode($this->response);
                 break;
-           
+
             case 'array':
                 $response = json_decode($this->response, true);
                 break;
@@ -188,7 +198,7 @@ class CurlHelper
             return (array) $response;
         }
 
-        if($this->response == "" || empty($this->response)){
+        if ($this->response == "" || empty($this->response)) {
             return null;
         }
 
@@ -213,7 +223,7 @@ class CurlHelper
             case '403':
                 $msg = _("Forbidden, denied access to the requested action.");
                 break;
-           
+
             case '404':
                 $msg = _("Nothing has been found.");
                 break;
