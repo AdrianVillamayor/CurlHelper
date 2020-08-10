@@ -14,6 +14,8 @@ A simple class that helps to organize and have a standard when creating new proj
 ```php
 $curl = new CurlHelper();
 
+$url = '{url}';
+
 $fields = array(
     'client_id' => '{app-id}',
     'client_secret' => '{app-secret}',
