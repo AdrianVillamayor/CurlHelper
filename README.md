@@ -48,7 +48,6 @@ list($error, $msg) = $curl->parseCode();
 ### POST Request
 
 ```php
-// POST
 $curl->setPostParams([
     'client_id' => '{app-id}',
     'client_secret' => '{app-secret}',
@@ -56,15 +55,16 @@ $curl->setPostParams([
     'redirect_uri' => '{redirect-uri}',
     'code' => '{code}'
 ]);
+```
 
-// POST RAW
+```php
+// RAW
 $curl->setPostRaw("key1=value1&key2=value2");
 ```
 
 ### GET Request
 
 ```php
-// GET
 $curl->setGetParams([
     'param' => '{param}',
     'type' => '{type}'
@@ -75,7 +75,6 @@ $curl->setGetParams([
 
 
 ```php
-// PUT
 $curl->setPutParams([
     'param' => '{param}',
     'type' => '{type}'
