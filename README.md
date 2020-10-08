@@ -4,7 +4,7 @@ A simple class that helps to organize and have a standard when creating new proj
 
 <br/>
 
-# Installation
+## Installation
 
 ```php
  require_once ROOT . 'CurlHelper.php';
@@ -12,7 +12,7 @@ A simple class that helps to organize and have a standard when creating new proj
 
 <br/>
 
-# Usage
+### Usage
 
 ```php
 $url    = '{url}';
