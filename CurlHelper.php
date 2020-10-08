@@ -32,6 +32,11 @@ class CurlHelper
     protected $url;
 
     /**
+     * @var null|string
+     */
+    protected $mime;
+
+    /**
      * @var string
      */
     protected $content_type;
@@ -54,7 +59,7 @@ class CurlHelper
     /**
      * @var array
      */
-    protected $cookies = [];
+    protected $put_data = [];
 
     /**
      * @var array
@@ -62,19 +67,23 @@ class CurlHelper
     protected $headers = [];
 
     /**
-     * @var array
-     */
-    protected $xpath = [];
-
-    /**
-     * @var array
-     */
-    protected $files = [];
-
-    /**
-     * @var array
+     * @var mixed
      */
     protected $response = [];
+
+    /**
+     * @var string
+     */
+    protected $header_size;
+
+    /**
+     * @var string
+     */
+    protected $error;
+    /**
+     * @var int
+     */
+    protected $errno;
 
     /**
      * @var string
@@ -87,11 +96,116 @@ class CurlHelper
     public $debug;
 
     /**
+     * @var bool
+     */
+    public $is_debug = false;
+
+    /**
      * @var mixed
      */
-    public $MIME_X_WWW_FORM   = 'application/x-www-form-urlencoded';
-    public $MIME_FORM_DATA    = 'multipart/form-data';
-    public $MIME_JSON         = 'application/json';
+    const MIME_X_WWW_FORM   = 'application/x-www-form-urlencoded';
+    const MIME_FORM_DATA    = 'multipart/form-data';
+    const MIME_JSON         = 'application/json';
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @param string $mime
+     * @return $this
+     */
+
+    public function setMime($mime = null)
+    {
+        switch ($mime) {
+            case 'form':
+                $this->mime =  self::MIME_X_WWW_FORM;
+                break;
+
+            case 'multipart':
+                $this->mime =  self::MIME_FORM_DATA;
+                break;
+
+            case 'json':
+                $this->mime =  self::MIME_JSON;
+                break;
+
+            default:
+                $this->mime =  self::MIME_JSON;
+                break;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+
+    public function setHeaders($data)
+    {
+        foreach ($data as $key => $val) {
+            $this->headers[$this->fixStringCase($key)] = $val;
+        }
+        return $this;
+    }
+
+    /**
+     * @param string $raw
+     * @return $this
+     */
+    public function setPostRaw($raw)
+    {
+        $this->post_raw = $raw;
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setPostParams($data)
+    {
+        $this->post_data = array_merge($this->post_data, $data);
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setGetParams($data)
+    {
+        $this->get_data = array_merge($this->get_data, $data);
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     * @return $this
+     */
+    public function setPutParams($data)
+    {
+        $this->put_data = array_merge($this->put_data, $data);
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setDebug()
+    {
+        $this->is_debug = true;
+        return $this;
+    }
 
     /**
      * This method will perform an action/method thru HTTP/API calls
@@ -106,66 +220,72 @@ class CurlHelper
      * @return void
      */
 
-    public function perform_http_request($method, $url, $mime, $data, $debug = false): void
+    public function execute(): void
     {
         $this->ch  = curl_init();
-        $this->url = $url;
 
-        switch ($mime) {
-            case 'form':
-                $this->content_type =  $this->MIME_X_WWW_FORM;
-                break;
-
-            case 'multipart':
-                $this->content_type =  $this->MIME_FORM_DATA;
-                break;
-
-            case 'json':
-                $this->content_type =  $this->MIME_JSON;
-                $data = json_encode($data);
-                break;
-
-            default:
-                $this->content_type =  $this->MIME_JSON;
-                break;
+        //- POST 
+        if (!empty($this->post_data)) {
+            curl_setopt($this->ch, CURLOPT_POST, true);
+            if ($this->mime == self::MIME_JSON) {
+                $this->post_data = json_encode($this->post_data);
+            }
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_data);
+            $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
         }
 
-        switch ($method) {
-            case "POST":
-                curl_setopt($this->ch, CURLOPT_POST, true);
-
-                if (!empty($data)) {
-                    curl_setopt($this->ch, CURLOPT_POSTFIELDS, $data);
-                }
-                break;
-
-            case "PUT":
-                curl_setopt($this->ch, CURLOPT_PUT, true);
-                break;
-
-            default:
-                if (!empty($data)) {
-                    $url = sprintf("%s?%s", $url, http_build_query($data));
-                }
-                break;
+        //- POST RAW 
+        elseif (isset($this->post_raw)) {
+            curl_setopt($this->ch, CURLOPT_POST, true);
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_raw);
+            $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
+            $this->headers['Content-Length'] = strlen($this->post_raw);
         }
 
-        curl_setopt($this->ch, CURLOPT_URL, $this->url);
+        // - PUT
+        elseif (isset($this->put_data)) {
+            curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->put_raw);
+            $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
+
+            // - GET
+        } elseif (!empty($this->get_data)) {
+            curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");
+            $this->url = sprintf("%s?%s", $this->url, http_build_query($this->get_data));
+        }
+
+        $url = $this->generateUrl();
+
+        curl_setopt($this->ch, CURLOPT_URL, $url);
 
         curl_setopt($this->ch, CURLOPT_USERAGENT, $this->user_agent);
 
-        curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: {$this->content_type}; charset=utf-8 ;",
-        ));
+        if (!empty($this->headers)) {
+            $data = [];
+            foreach ($this->headers as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $val) {
+                        $data[] = "$k: $val";
+                    }
+                } else {
+                    $data[] = "$k: $v";
+                }
+            }
+            curl_setopt($this->ch, CURLOPT_HTTPHEADER, $data);
+        }
 
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
 
-        $this->response = curl_exec($this->ch);
+        $this->response     = curl_exec($this->ch);
 
-        $this->http_code = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+        $this->http_code    = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+        $this->header_size  = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
+        $this->sent         = curl_getinfo($this->ch, CURLINFO_HEADER_OUT);
+        $this->error        = curl_error($this->ch);
+        $this->errno        = curl_errno($this->ch);
 
-        if ($debug) {
+        if ($this->is_debug) {
             $this->debug = curl_getinfo($this->ch);
         }
 
@@ -175,6 +295,11 @@ class CurlHelper
     public function http_code(): string
     {
         return $this->http_code;
+    }
+
+    public function error(): array
+    {
+        return array("Error" => $this->error, "Errno" => $this->errno);
     }
 
     public function debug(): ?array
@@ -238,5 +363,67 @@ class CurlHelper
         }
 
         return array($error, $msg);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function generateUrl()
+    {
+        $parsed_string = '';
+        $url = parse_url($this->url);
+        if (!empty($url['query'])) {
+            parse_str($url['query'], $get_data);
+            $url['query'] = http_build_query(array_merge($get_data, $this->get_data));
+        } else {
+            $url['query'] = http_build_query($this->get_data);
+        }
+        if (isset($url['scheme'])) {
+            $parsed_string .= $url['scheme'] . '://';
+        }
+        if (isset($url['user'])) {
+            $parsed_string .= $url['user'];
+            if (isset($url['pass'])) {
+                $parsed_string .= ':' . $url['pass'];
+            }
+            $parsed_string .= '@';
+        }
+        if (isset($url['host'])) {
+            $parsed_string .= $url['host'];
+        }
+        if (isset($url['port'])) {
+            $parsed_string .= ':' . $url['port'];
+        }
+        if (!empty($url['path'])) {
+            $parsed_string .= $url['path'];
+        } else {
+            $parsed_string .= '/';
+        }
+        if (!empty($url['query'])) {
+            $parsed_string .= '?' . $url['query'];
+        }
+        if (isset($url['fragment'])) {
+            $parsed_string .= '#' . $url['fragment'];
+        }
+
+        return $parsed_string;
+    }
+
+
+    /**
+     * Fix strings to Proper-Case
+     * @param string $str
+     * @return string
+     */
+    protected function fixStringCase($str)
+    {
+        $str = explode('-', $str);
+
+        foreach ($str as $word) {
+            $word = ucfirst($word);
+        }
+
+        return implode('-', $str);
     }
 }
