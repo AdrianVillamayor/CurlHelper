@@ -52,14 +52,14 @@ class CurlHelper
     protected $post_data = [];
 
     /**
-     * @var null|string
-     */
-    protected $post_raw;
-
-    /**
      * @var array
      */
     protected $put_data = [];
+
+    /**
+     * @var null|string
+     */
+    protected $post_raw;
 
     /**
      * @var array
@@ -243,7 +243,7 @@ class CurlHelper
         }
 
         // - PUT
-        elseif (isset($this->put_data)) {
+        elseif (!empty($this->put_data)) {
             curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->put_raw);
             $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
@@ -327,7 +327,11 @@ class CurlHelper
             return null;
         }
 
-        return $this->response;
+        if (is_string($this->response)) {
+            return null;
+        }
+
+        return $response;
     }
 
     public function parseCode(): array
