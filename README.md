@@ -12,7 +12,7 @@ A simple class that helps to organize and have a standard when creating new proj
 
 <br/>
 
-### Usage
+## Usage
 
 ```php
 $url    = '{url}';
@@ -45,7 +45,7 @@ list($error, $msg) = $curl->parseCode();
 
 ## Methods
 
-#### POST Request
+### POST Request
 
 ```php
 // POST
@@ -61,7 +61,7 @@ $curl->setPostParams([
 $curl->setPostRaw("key1=value1&key2=value2");
 ```
 
-#### GET Request
+### GET Request
 
 ```php
 // GET
@@ -71,7 +71,7 @@ $curl->setGetParams([
 ]);
 ```
 
-#### PUT Request
+### PUT Request
 
 
 ```php
