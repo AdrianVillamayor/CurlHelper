@@ -9,7 +9,6 @@
             "email": "adrian.villamayor@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {"Adrii\\": ""}
     },
