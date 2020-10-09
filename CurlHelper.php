@@ -1,7 +1,7 @@
 <?php
 
 
-namespace curl\CurlHelper;
+namespace Adrii;
 
 /**
  *
