@@ -1,8 +1,5 @@
 <?php
 
-
-namespace Adrii;
-
 /**
  *
  * This class has all the necessary code for making API calls thru curl library
@@ -11,6 +8,8 @@ namespace Adrii;
  * @link       https://github.com/AdrianVillamayor/CurlHelper
  *
  */
+
+namespace Adrii;
 
 class CurlHelper
 {
