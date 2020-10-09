@@ -1,5 +1,5 @@
 {
-    "name": "adrii/curlhelper",
+    "name": "adrii/curl-helper",
     "description": "A simple class that helps to organize and have a standard when creating new projects.",
     "type": "helper",
     "license": "MIT",
