@@ -10,7 +10,9 @@
         }
     ],
     "autoload": {
-        "Adrii\\":"src/"
+        "psr-4": {
+            "Adrii\\":"src/"
+        }
     },
     "require": {
         "php": ">=7.0",
