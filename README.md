@@ -13,7 +13,7 @@ require_once ROOT . 'CurlHelper.php';
 ```
 
 ### Composer
-```
+```bash
 composer require adrii/curl-helper
 ```
 
