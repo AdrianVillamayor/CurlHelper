@@ -247,9 +247,10 @@ class CurlHelper
             curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->put_raw);
             $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
+        }
 
-            // - GET
-        } elseif (!empty($this->get_data)) {
+        // - GET
+        elseif (!empty($this->get_data)) {
             curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");
             $this->url = sprintf("%s?%s", $this->url, http_build_query($this->get_data));
         }
@@ -297,14 +298,9 @@ class CurlHelper
         return $this->http_code;
     }
 
-    public function error(): array
-    {
-        return array("Error" => $this->error, "Errno" => $this->errno);
-    }
-
     public function debug(): ?array
     {
-        return $this->debug;
+        return array("Debug" => $this->debug, "Error" => $this->error, "Errno" => $this->errno, "Out" => $this->sent, "Code" =>  $this->http_code, "Size" =>  $this->header_size);
     }
 
     public function response($format = 'array'): ?array
@@ -377,15 +373,18 @@ class CurlHelper
     {
         $parsed_string = '';
         $url = parse_url($this->url);
+
         if (!empty($url['query'])) {
             parse_str($url['query'], $get_data);
             $url['query'] = http_build_query(array_merge($get_data, $this->get_data));
         } else {
             $url['query'] = http_build_query($this->get_data);
         }
+
         if (isset($url['scheme'])) {
             $parsed_string .= $url['scheme'] . '://';
         }
+        
         if (isset($url['user'])) {
             $parsed_string .= $url['user'];
             if (isset($url['pass'])) {
@@ -393,20 +392,25 @@ class CurlHelper
             }
             $parsed_string .= '@';
         }
+
         if (isset($url['host'])) {
             $parsed_string .= $url['host'];
         }
+
         if (isset($url['port'])) {
             $parsed_string .= ':' . $url['port'];
         }
+
         if (!empty($url['path'])) {
             $parsed_string .= $url['path'];
         } else {
             $parsed_string .= '/';
         }
+
         if (!empty($url['query'])) {
             $parsed_string .= '?' . $url['query'];
         }
+
         if (isset($url['fragment'])) {
             $parsed_string .= '#' . $url['fragment'];
         }
