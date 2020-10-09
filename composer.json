@@ -11,7 +11,9 @@
     ],
     "minimum-stability": "dev",
     "autoload": {
-        "psr-4": {"Adrii\\": ""}
+        "psr-4": {
+            "Adrii\\": ""
+        }
     },
     "require": {
         "php": ">=7.0",

@@ -110,6 +110,15 @@ class CurlHelper
     const MIME_FORM_DATA    = 'multipart/form-data';
     const MIME_JSON         = 'application/json';
 
+
+
+
+    
+    public function __construct()
+    {
+        $this->ch = curl_init();
+    }
+
     /**
      * @param string $url
      * @return $this
@@ -225,8 +234,6 @@ class CurlHelper
 
     public function execute(): void
     {
-        $this->ch  = curl_init();
-
         //- POST 
         if (!empty($this->post_data)) {
             curl_setopt($this->ch, CURLOPT_POST, true);
