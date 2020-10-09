@@ -6,8 +6,15 @@ A simple class that helps to organize and have a standard when creating new proj
 
 ## Installation
 
+### Manual
+
 ```php
- require_once ROOT . 'CurlHelper.php';
+require_once ROOT . 'CurlHelper.php';
+```
+
+### Composer
+```
+composer require adrii/curl-helper
 ```
 
 <br/>
