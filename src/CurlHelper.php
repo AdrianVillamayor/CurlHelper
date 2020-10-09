@@ -1,5 +1,8 @@
 <?php
 
+
+namespace curl\CurlHelper;
+
 /**
  *
  * This class has all the necessary code for making API calls thru curl library

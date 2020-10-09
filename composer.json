@@ -1,0 +1,32 @@
+{
+    "name": "curl/curl-helper",
+    "description": "A simple class that helps to organize and have a standard when creating new projects.",
+    "type": "helper",
+    "license": "Mit",
+    "authors": [
+        {
+            "name": "Adrian",
+            "email": "adrian.villamayor@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
+
+{
+    "name": "vitalis/hello-composer",
+    "description": "A simple hello world composer package",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ogbonna Vitalis",
+            "email": "agavitalisogbonna@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"vitalis\\HelloWorld\\": "src/"}
+    },
+    "require": {}
+}
