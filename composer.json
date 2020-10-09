@@ -3,16 +3,17 @@
     "description": "A simple class that helps to organize and have a standard when creating new projects.",
     "type": "helper",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Adrian",
-            "email": "adrian.villamayor@gmail.com"
-        }
-    ],
+    "authors": [{
+        "name": "Adrian",
+        "email": "adrian.villamayor@gmail.com"
+    }],
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Adrii\\CurlHelper\\": ""
+            "Adrii\\": ""
+        },
+        "psr-0": {
+            "Adrii\\": ""
         }
     },
     "require": {
