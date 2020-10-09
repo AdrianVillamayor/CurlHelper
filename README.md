@@ -10,6 +10,13 @@ A simple class that helps to organize and have a standard when creating new proj
 
 ## Installation
 
+Use [Composer](https://getcomposer.org/) to install the library.
+
+```bash
+composer require adrii/curl-helper
+```
+
+
 ### Manual
 
 ```php
@@ -17,10 +24,8 @@ require_once ROOT . 'CurlHelper.php';
 ```
 
 ### Composer
-
-Use [Composer](https://getcomposer.org/) to install the library.
-```bash
-composer require adrii/curl-helper
+```php
+use Adrii\CurlHelper;
 ```
 
 
