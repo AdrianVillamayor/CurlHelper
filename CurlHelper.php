@@ -114,7 +114,7 @@ class CurlHelper
      * @param string $url
      * @return $this
      */
-    public function setUrl($url)
+    public function setUrl($url): object
     {
         $this->url = $url;
         return $this;
@@ -125,7 +125,7 @@ class CurlHelper
      * @return $this
      */
 
-    public function setMime($mime = null)
+    public function setMime($mime = null): object
     {
         switch ($mime) {
             case 'form':
@@ -153,10 +153,10 @@ class CurlHelper
      * @return $this
      */
 
-    public function setHeaders($data)
+    public function setHeaders($data): object
     {
         foreach ($data as $key => $val) {
-            $this->headers[$this->fixStringCase($key)] = $val;
+            $this->headers[$this->parseStringHeader($key)] = $val;
         }
         return $this;
     }
@@ -165,7 +165,7 @@ class CurlHelper
      * @param string $raw
      * @return $this
      */
-    public function setPostRaw($raw)
+    public function setPostRaw($raw): object
     {
         $this->post_raw = $raw;
         return $this;
@@ -175,7 +175,7 @@ class CurlHelper
      * @param array $data
      * @return $this
      */
-    public function setPostParams($data)
+    public function setPostParams($data): object
     {
         $this->post_data = array_merge($this->post_data, $data);
         return $this;
@@ -185,7 +185,7 @@ class CurlHelper
      * @param array $data
      * @return $this
      */
-    public function setGetParams($data)
+    public function setGetParams($data): object
     {
         $this->get_data = array_merge($this->get_data, $data);
         return $this;
@@ -195,7 +195,7 @@ class CurlHelper
      * @param array $data
      * @return $this
      */
-    public function setPutParams($data)
+    public function setPutParams($data): object
     {
         $this->put_data = array_merge($this->put_data, $data);
         return $this;
@@ -204,7 +204,7 @@ class CurlHelper
     /**
      * @return $this
      */
-    public function setDebug()
+    public function setDebug(): object
     {
         $this->is_debug = true;
         return $this;
@@ -372,22 +372,19 @@ class CurlHelper
     /**
      * @return string
      */
-    protected function generateUrl()
+    protected function generateUrl(): string
     {
         $parsed_string = '';
         $url = parse_url($this->url);
-
         if (!empty($url['query'])) {
             parse_str($url['query'], $get_data);
             $url['query'] = http_build_query(array_merge($get_data, $this->get_data));
         } else {
             $url['query'] = http_build_query($this->get_data);
         }
-
         if (isset($url['scheme'])) {
             $parsed_string .= $url['scheme'] . '://';
         }
-        
         if (isset($url['user'])) {
             $parsed_string .= $url['user'];
             if (isset($url['pass'])) {
@@ -395,25 +392,20 @@ class CurlHelper
             }
             $parsed_string .= '@';
         }
-
         if (isset($url['host'])) {
             $parsed_string .= $url['host'];
         }
-
         if (isset($url['port'])) {
             $parsed_string .= ':' . $url['port'];
         }
-
         if (!empty($url['path'])) {
             $parsed_string .= $url['path'];
         } else {
             $parsed_string .= '/';
         }
-
         if (!empty($url['query'])) {
             $parsed_string .= '?' . $url['query'];
         }
-
         if (isset($url['fragment'])) {
             $parsed_string .= '#' . $url['fragment'];
         }
@@ -427,7 +419,7 @@ class CurlHelper
      * @param string $str
      * @return string
      */
-    protected function fixStringCase($str)
+    protected function parseStringHeader($str): string
     {
         $str = explode('-', $str);
 

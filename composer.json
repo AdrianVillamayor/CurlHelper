@@ -9,10 +9,10 @@
             "email": "adrian.villamayor@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {"Adrii\\": ""}
     },
-    "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
         "ext-curl": "*"
