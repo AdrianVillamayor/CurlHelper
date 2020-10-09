@@ -3,14 +3,10 @@
 *By [Adrii](https://github.com/AdrianVillamayor)*
 
 [![Latest Stable Version](http://img.shields.io/packagist/v/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
-
 [![Total Downloads](http://img.shields.io/packagist/dt/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
-
 [![License](http://img.shields.io/packagist/l/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
 
 A simple class that helps to organize and have a standard when creating new projects.
-
-<br/>
 
 ## Installation
 
@@ -27,7 +23,6 @@ Use [Composer](https://getcomposer.org/) to install the library.
 composer require adrii/curl-helper
 ```
 
-<br/>
 
 ## Usage
 
@@ -58,7 +53,6 @@ $code       = $curl->http_code();
 list($error, $msg) = $curl->parseCode();
 
 ```
-<br/>
 
 ## Methods
 
@@ -98,14 +92,10 @@ $curl->setPutParams([
 ]);
 ```
 
-<br/>
-
 # Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
-
-<br/>
 
 # License
 [MIT](https://github.com/AdrianVillamayor/CurlHelper/blob/master/LICENSE)
