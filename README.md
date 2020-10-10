@@ -74,7 +74,16 @@ $curl->setPostParams([
 ```
 
 ```php
-// RAW
+// Array
+$curl->setPostRaw([
+    'client_id' => '{app-id}',
+    'client_secret' => '{app-secret}',
+    'grant_type' => 'authorization_code',
+    'redirect_uri' => '{redirect-uri}',
+    'code' => '{code}'
+]);
+
+// String
 $curl->setPostRaw("key1=value1&key2=value2");
 ```
 

@@ -110,9 +110,6 @@ class CurlHelper
     const MIME_JSON         = 'application/json';
 
 
-
-
-    
     public function __construct()
     {
         $this->ch = curl_init();
@@ -170,11 +167,15 @@ class CurlHelper
     }
 
     /**
-     * @param string $raw
+     * @param mixed $raw
      * @return $this
      */
     public function setPostRaw($raw): object
     {
+        if(is_array($raw)){
+            $raw = http_build_query($raw);
+        }
+
         $this->post_raw = $raw;
         return $this;
     }
