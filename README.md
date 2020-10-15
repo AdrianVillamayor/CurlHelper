@@ -16,18 +16,16 @@ Use [Composer](https://getcomposer.org/) to install the library.
 composer require adrii/curl-helper
 ```
 
+### Composer
+```php
+use Adrii\CurlHelper;
+```
 
 ### Manual
 
 ```php
 require_once ROOT . 'CurlHelper.php';
 ```
-
-### Composer
-```php
-use Adrii\CurlHelper;
-```
-
 
 ## Usage
 
