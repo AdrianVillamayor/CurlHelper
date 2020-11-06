@@ -6,7 +6,7 @@
 [![Total Downloads](http://img.shields.io/packagist/dt/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
 [![License](http://img.shields.io/packagist/l/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
 
-A simple class that helps to organize and have a standard when creating new projects.
+CurlHelper is a lightweight PHP class to organize and have a standard in projects.
 
 ## Installation
 
