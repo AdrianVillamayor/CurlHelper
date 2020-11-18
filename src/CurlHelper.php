@@ -315,7 +315,6 @@ class CurlHelper
 
     public function response($format = 'array'): ?array
     {
-        $encoding = false;
         $HTTP_ACCEPT_ENCODING = $_SERVER["HTTP_ACCEPT_ENCODING"];
 
         if ((strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) || strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false) {
