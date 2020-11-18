@@ -172,7 +172,7 @@ class CurlHelper
      */
     public function setPostRaw($raw): object
     {
-        if(is_array($raw)){
+        if (is_array($raw)) {
             $raw = http_build_query($raw);
         }
 
@@ -315,6 +315,13 @@ class CurlHelper
 
     public function response($format = 'array'): ?array
     {
+        $encoding = false;
+        $HTTP_ACCEPT_ENCODING = $_SERVER["HTTP_ACCEPT_ENCODING"];
+
+        if ((strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) || strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false) {
+            $this->response = gzuncompress($this->resposnse);
+        }
+
         switch ($format) {
             case 'obj':
                 $response = json_decode($this->response, false, 512, JSON_BIGINT_AS_STRING);
