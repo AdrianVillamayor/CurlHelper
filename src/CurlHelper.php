@@ -315,11 +315,11 @@ class CurlHelper
 
     public function response($format = 'array'): ?array
     {
-        $HTTP_ACCEPT_ENCODING = $_SERVER["HTTP_ACCEPT_ENCODING"];
+        // $HTTP_ACCEPT_ENCODING = $_SERVER["HTTP_ACCEPT_ENCODING"];
 
-        if ((strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) || strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false) {
-            $this->response = gzuncompress($this->response);
-        }
+        // if ((strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) || strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false) {
+        //     $this->response = gzuncompress($this->response);
+        // }
 
         switch ($format) {
             case 'obj':
