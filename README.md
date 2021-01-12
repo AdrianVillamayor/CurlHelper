@@ -42,9 +42,10 @@ $curl->setGetParams([
     'type' => '{type}'
 ]);
 
+// Disable parse (dafault Enabled) 
 $curl->setHeaders([
     "Authorization" => "Basic {$basic}"
-]);
+], false);
 
 $curl->setOptions([
     CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0,
