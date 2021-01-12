@@ -155,13 +155,18 @@ class CurlHelper
 
     /**
      * @param array $data
+     * @param bool $parse : default true
      * @return $this
      */
 
-    public function setHeaders($data): object
+    public function setHeaders($data, $parse = true): object
     {
         foreach ($data as $key => $val) {
-            $this->headers[$this->parseStringHeader($key)] = $val;
+            if ($parse) {
+                $this->headers[$this->parseStringHeader($key)] = $val;
+            } else {
+                $this->headers[$key] = $val;
+            }
         }
         return $this;
     }
