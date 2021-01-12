@@ -42,7 +42,7 @@ $curl->setGetParams([
     'type' => '{type}'
 ]);
 
-// Disable parse (dafault Enabled) 
+// Disable parse (dafault Enabled:true) 
 $curl->setHeaders([
     "Authorization" => "Basic {$basic}"
 ], false);
