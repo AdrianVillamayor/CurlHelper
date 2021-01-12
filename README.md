@@ -46,6 +46,11 @@ $curl->setHeaders([
     "Authorization" => "Basic {$basic}"
 ]);
 
+$curl->setOptions([
+    CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0,
+    CURLOPT_CONNECTTIMEOUT => 30,
+]);
+
 $curl->setMime("json");
 
 $curl->execute();

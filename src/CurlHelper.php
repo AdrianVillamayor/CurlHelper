@@ -167,6 +167,20 @@ class CurlHelper
     }
 
     /**
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions($options): object
+    {
+        foreach ($options as $key => $value) {
+            curl_setopt($this->ch, $key, $value);
+        }
+        
+        return $this;
+    }
+
+
+    /**
      * @param mixed $raw
      * @return $this
      */
