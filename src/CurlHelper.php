@@ -338,6 +338,7 @@ class CurlHelper
 
         // if ((strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) || strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false) {
         //     $this->response = gzuncompress($this->response);
+        //     $this->response = gzdecode($this->response);
         // }
 
         switch ($format) {
