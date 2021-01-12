@@ -175,7 +175,7 @@ class CurlHelper
         foreach ($options as $key => $value) {
             curl_setopt($this->ch, $key, $value);
         }
-        
+
         return $this;
     }
 
@@ -440,17 +440,17 @@ class CurlHelper
         return $parsed_string;
     }
 
-
     /**
      * Fix strings to Proper-Case
      * @param string $str
      * @return string
      */
+
     protected function parseStringHeader($str): string
     {
         $str = explode('-', $str);
 
-        foreach ($str as $word) {
+        foreach ($str as &$word) {
             $word = ucfirst($word);
         }
 
