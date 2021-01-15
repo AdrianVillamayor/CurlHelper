@@ -37,15 +37,14 @@ $curl = new CurlHelper();
 
 $curl->setUrl($url);
 
-$curl->setGetParams([
+$curl->setPostParams([
     'param' => '{param}',
     'type' => '{type}'
 ]);
 
-// Disable parse (dafault Enabled:true) 
 $curl->setHeaders([
     "Authorization" => "Basic {$basic}"
-], false);
+], false); // Disable parse (dafault Enabled:true) 
 
 $curl->setOptions([
     CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_2_0,
