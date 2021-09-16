@@ -24,7 +24,7 @@ class CurlHelper
     public $timeout = 30;
 
     /**
-     * @var resource
+     * @var \CurlHandle
      */
     protected $ch;
 
@@ -373,28 +373,28 @@ class CurlHelper
         switch ($this->http_code) {
             case '200':
             case '201':
-                $msg = _("Success");
-                $error = false;
+                $msg    = "Success";
+                $error  = false;
                 break;
 
             case '409':
-                $msg = _("This email is already registered.");
+                $msg    = "This email is already registered.";
                 break;
 
             case '403':
-                $msg = _("Forbidden, denied access to the requested action.");
+                $msg    = "Forbidden, denied access to the requested action.";
                 break;
 
             case '404':
-                $msg = _("Nothing has been found.");
+                $msg    = "Nothing has been found.";
                 break;
 
             case '401':
-                $msg = _("Unauthorized");
+                $msg    = "Unauthorized";
                 break;
 
             case '405':
-                $msg = _("Method Not Allowed");
+                $msg    = "Method Not Allowed";
                 break;
         }
 
