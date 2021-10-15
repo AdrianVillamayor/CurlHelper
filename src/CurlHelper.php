@@ -265,7 +265,7 @@ class CurlHelper
             if ($this->mime == self::MIME_JSON) {
                 $this->post_data = json_encode($this->post_data);
             }
-            
+
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_data);
             $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
         }
@@ -355,6 +355,13 @@ class CurlHelper
 
             case 'array':
                 $response = json_decode($this->response, true, 512, JSON_BIGINT_AS_STRING);
+                break;
+
+
+            case 'xml':
+                $xml      = simplexml_load_string($this->response);
+                $json     = json_encode($xml);
+                $response =  json_decode($json, true, 512, JSON_BIGINT_AS_STRING);
                 break;
         }
 
