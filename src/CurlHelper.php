@@ -108,6 +108,7 @@ class CurlHelper
     const MIME_X_WWW_FORM   = 'application/x-www-form-urlencoded';
     const MIME_FORM_DATA    = 'multipart/form-data';
     const MIME_JSON         = 'application/json';
+    const MIME_XML          = 'application/xml';
 
 
     public function __construct()
@@ -143,6 +144,10 @@ class CurlHelper
 
             case 'json':
                 $this->mime =  self::MIME_JSON;
+                break;
+
+            case 'xml':
+                $this->mime =  self::MIME_XML;
                 break;
 
             default:
@@ -256,9 +261,11 @@ class CurlHelper
         //- POST 
         if (!empty($this->post_data)) {
             curl_setopt($this->ch, CURLOPT_POST, true);
+
             if ($this->mime == self::MIME_JSON) {
                 $this->post_data = json_encode($this->post_data);
             }
+            
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_data);
             $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
         }
