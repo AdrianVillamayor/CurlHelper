@@ -100,7 +100,7 @@ class CurlHelper
     /**
      * @var bool
      */
-    public $is_debug = false;
+    public $is_debug = FALSE;
 
     /**
      * @var mixed
@@ -109,6 +109,7 @@ class CurlHelper
     const MIME_FORM_DATA    = 'multipart/form-data';
     const MIME_JSON         = 'application/json';
     const MIME_XML          = 'application/xml';
+    const MIME_BINARY       = 'application/binary';
 
 
     public function __construct()
@@ -150,6 +151,10 @@ class CurlHelper
                 $this->mime =  self::MIME_XML;
                 break;
 
+            case 'binary':
+                $this->mime =  self::MIME_BINARY;
+                break;
+
             default:
                 $this->mime =  self::MIME_JSON;
                 break;
@@ -160,11 +165,11 @@ class CurlHelper
 
     /**
      * @param array $data
-     * @param bool $parse : default true
+     * @param bool $parse : default TRUE
      * @return $this
      */
 
-    public function setHeaders($data, $parse = true): object
+    public function setHeaders($data, $parse = TRUE): object
     {
         foreach ($data as $key => $val) {
             if ($parse) {
@@ -215,6 +220,24 @@ class CurlHelper
     }
 
     /**
+     * @param array $files
+     * @param bool $form
+     * @return $this
+     */
+    public function setPostFiles($files, $form = FALSE): object
+    {
+        $c_files_array = array();
+
+        if ($form) {
+            $c_files_array = $this->prefabFromFiles($files, $c_files_array);
+        } else {
+            $c_files_array = $this->prefabFiles($files, $c_files_array);
+        }
+
+        return $this->setPostParams($c_files_array);
+    }
+
+    /**
      * @param array $data
      * @return $this
      */
@@ -239,7 +262,7 @@ class CurlHelper
      */
     public function setDebug(): object
     {
-        $this->is_debug = true;
+        $this->is_debug = TRUE;
         return $this;
     }
 
@@ -260,7 +283,7 @@ class CurlHelper
     {
         //- POST 
         if (!empty($this->post_data)) {
-            curl_setopt($this->ch, CURLOPT_POST, true);
+            curl_setopt($this->ch, CURLOPT_POST, TRUE);
 
             if ($this->mime == self::MIME_JSON) {
                 $this->post_data = json_encode($this->post_data);
@@ -272,7 +295,7 @@ class CurlHelper
 
         //- POST RAW 
         elseif (isset($this->post_raw)) {
-            curl_setopt($this->ch, CURLOPT_POST, true);
+            curl_setopt($this->ch, CURLOPT_POST, TRUE);
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_raw);
             $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
             $this->headers['Content-Length'] = strlen($this->post_raw);
@@ -311,8 +334,8 @@ class CurlHelper
             curl_setopt($this->ch, CURLOPT_HTTPHEADER, $data);
         }
 
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, TRUE);
 
         $this->response     = curl_exec($this->ch);
 
@@ -341,27 +364,20 @@ class CurlHelper
 
     public function response($format = 'array'): ?array
     {
-        // $HTTP_ACCEPT_ENCODING = $_SERVER["HTTP_ACCEPT_ENCODING"];
-
-        // if ((strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) || strpos($HTTP_ACCEPT_ENCODING, 'gzip') !== false) {
-        //     $this->response = gzuncompress($this->response);
-        //     $this->response = gzdecode($this->response);
-        // }
-
         switch ($format) {
             case 'obj':
-                $response = json_decode($this->response, false, 512, JSON_BIGINT_AS_STRING);
+                $response = json_decode($this->response, FALSE, 512, JSON_BIGINT_AS_STRING);
                 break;
 
             case 'array':
-                $response = json_decode($this->response, true, 512, JSON_BIGINT_AS_STRING);
+                $response = json_decode($this->response, TRUE, 512, JSON_BIGINT_AS_STRING);
                 break;
 
 
             case 'xml':
                 $xml      = simplexml_load_string($this->response);
                 $json     = json_encode($xml);
-                $response =  json_decode($json, true, 512, JSON_BIGINT_AS_STRING);
+                $response = json_decode($json, TRUE, 512, JSON_BIGINT_AS_STRING);
                 break;
         }
 
@@ -380,9 +396,12 @@ class CurlHelper
         return $response;
     }
 
+    /**
+     * @return array $error, $msg
+     */
     public function parseCode(): array
     {
-        $error = true;
+        $error = TRUE;
 
         switch ($this->http_code) {
             case "100":
@@ -393,31 +412,31 @@ class CurlHelper
                 break;
             case "200":
                 $msg = 'OK';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "201":
                 $msg = 'Created';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "202":
                 $msg = 'Accepted';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "203":
                 $msg = 'Non-Authoritative Information';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "204":
                 $msg = 'No Content';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "205":
                 $msg = 'Reset Content';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "206":
                 $msg = 'Partial Content';
-                $error  = false;
+                $error  = FALSE;
                 break;
             case "300":
                 $msg = 'Multiple Choices';
@@ -519,15 +538,18 @@ class CurlHelper
     {
         $parsed_string = '';
         $url = parse_url($this->url);
+
         if (!empty($url['query'])) {
             parse_str($url['query'], $get_data);
             $url['query'] = http_build_query(array_merge($get_data, $this->get_data));
         } else {
             $url['query'] = http_build_query($this->get_data);
         }
+
         if (isset($url['scheme'])) {
             $parsed_string .= $url['scheme'] . '://';
         }
+
         if (isset($url['user'])) {
             $parsed_string .= $url['user'];
             if (isset($url['pass'])) {
@@ -535,20 +557,25 @@ class CurlHelper
             }
             $parsed_string .= '@';
         }
+
         if (isset($url['host'])) {
             $parsed_string .= $url['host'];
         }
+
         if (isset($url['port'])) {
             $parsed_string .= ':' . $url['port'];
         }
+
         if (!empty($url['path'])) {
             $parsed_string .= $url['path'];
         } else {
             $parsed_string .= '/';
         }
+
         if (!empty($url['query'])) {
             $parsed_string .= '?' . $url['query'];
         }
+
         if (isset($url['fragment'])) {
             $parsed_string .= '#' . $url['fragment'];
         }
@@ -571,5 +598,47 @@ class CurlHelper
         }
 
         return implode('-', $str);
+    }
+
+    /**
+     * Prepare local file data to the CURLFile model.
+     * @param array $files
+     * @param array $c_files_array
+     * @return array
+     */
+    protected function prefabFiles($files, $c_files_array): array
+    {
+        if (!empty($files)) {
+            foreach ($files as $key) {
+                $mime = mime_content_type($key);
+                $info = pathinfo($key);
+                $name = $info['basename'];
+
+                $c_files_array[] = new CURLFile($key, $mime, $name);
+            }
+        }
+
+        return $c_files_array;
+    }
+
+    /**
+     * Prepare data from $_FILES to the CURLFile model  
+     * @param array $files
+     * @param array $c_files_array
+     * @return array
+     */
+    protected function prefabFromFiles($files, $c_files_array)
+    {
+        if (!empty($files)) {
+            for ($i = 0; $i < count($files['tmp_name']); $i++) {
+                $filename = $files['tmp_name'][$i];
+                $mime     = $files['type'][$i];
+                $name     = $files['name'][$i];
+
+                $c_files_array[] = new CURLFile($filename, $mime, $name);
+            }
+        }
+
+        return $c_files_array;
     }
 }
