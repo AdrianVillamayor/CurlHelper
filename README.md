@@ -53,6 +53,8 @@ $curl->setOptions([
 
 $curl->setMime("json");
 
+$curl->setUtf8();
+
 $curl->execute();
 
 $response   = $curl->response();
