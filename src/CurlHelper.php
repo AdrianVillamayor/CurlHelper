@@ -39,6 +39,11 @@ class CurlHelper
     protected $mime;
 
     /**
+     * @var bool
+     */
+    protected $utf8 = FALSE;
+
+    /**
      * @var string
      */
     protected $content_type;
@@ -131,7 +136,6 @@ class CurlHelper
      * @param string $mime
      * @return $this
      */
-
     public function setMime($mime = null): object
     {
         switch ($mime) {
@@ -164,11 +168,20 @@ class CurlHelper
     }
 
     /**
+     * @param string $utf8
+     * @return $this
+     */
+    public function setUtf8(): object
+    {
+        $this->uf8 = TRUE;
+        return $this;
+    }
+
+    /**
      * @param array $data
      * @param bool $parse : default TRUE
      * @return $this
      */
-
     public function setHeaders($data, $parse = TRUE): object
     {
         foreach ($data as $key => $val) {
@@ -193,7 +206,6 @@ class CurlHelper
 
         return $this;
     }
-
 
     /**
      * @param mixed $raw
@@ -278,7 +290,6 @@ class CurlHelper
 
      * @return void
      */
-
     public function execute(): void
     {
         //- POST 
@@ -290,14 +301,14 @@ class CurlHelper
             }
 
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_data);
-            $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
+            $this->headers['Content-Type'] = $this->parseMimeType();
         }
 
         //- POST RAW 
         elseif (isset($this->post_raw)) {
             curl_setopt($this->ch, CURLOPT_POST, TRUE);
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->post_raw);
-            $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
+            $this->headers['Content-Type'] = $this->parseMimeType();
             $this->headers['Content-Length'] = strlen($this->post_raw);
         }
 
@@ -305,7 +316,7 @@ class CurlHelper
         elseif (!empty($this->put_data)) {
             curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->put_raw);
-            $this->headers['Content-Type'] = $this->mime . " ; charset=utf-8 ;";
+            $this->headers['Content-Type'] = $this->parseMimeType();
         }
 
         // - GET
@@ -584,11 +595,21 @@ class CurlHelper
     }
 
     /**
+     * Fix strings to Mime-Type
+     * @return string
+     */
+    protected function parseMimeType(): string
+    {
+        $mime = ($this->utf8) ? $this->mime . "; charset=utf-8 ;" : $this->mime;
+
+        return $mime;
+    }
+
+    /**
      * Fix strings to Proper-Case
      * @param string $str
      * @return string
      */
-
     protected function parseStringHeader($str): string
     {
         $str = explode('-', $str);
