@@ -9,180 +9,105 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Adrii;
 
 class CurlHelper
 {
-    /**
-     * @var string
-     */
-    public $user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
+    public string $user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
 
-    /**
-     * @var int
-     */
-    public $timeout = 30;
+    public int $timeout = 30;
 
-    /**
-     * @var \CurlHandle
-     */
-    protected $ch;
+    protected \CurlHandle $ch;
 
-    /**
-     * @var null|string
-     */
-    protected $url;
+    protected ?string $url;
 
-    /**
-     * @var null|string
-     */
-    protected $mime;
+    protected ?string $mime = null;
 
-    /**
-     * @var bool
-     */
-    protected $utf8 = FALSE;
+    protected array $mime_type = array(
+        'MIME_X_WWW_FORM'   => 'application/x-www-form-urlencoded',
+        'MIME_FORM_DATA'    => 'multipart/form-data',
+        'MIME_JSON'         => 'application/json',
+        'MIME_XML'          => 'application/xml',
+        'MIME_BINARY'       => 'application/binary'
+    );
 
-    /**
-     * @var string
-     */
-    protected $content_type;
+    protected bool $utf8 = FALSE;
 
-    /**
-     * @var array
-     */
-    protected $get_data = [];
+    protected string $content_type;
 
-    /**
-     * @var array
-     */
-    protected $post_data = [];
+    protected array $get_data = [];
 
-    /**
-     * @var array
-     */
-    protected $put_data = [];
+    protected array $post_data = [];
 
-    /**
-     * @var null|string
-     */
-    protected $post_raw;
+    protected array $put_data = [];
 
-    /**
-     * @var array
-     */
-    protected $headers = [];
+    protected ?string $post_raw;
 
-    /**
-     * @var mixed
-     */
-    protected $response = [];
+    protected array $headers = [];
 
-    /**
-     * @var string
-     */
-    protected $header_size;
+    protected mixed $response;
 
-    /**
-     * @var string
-     */
-    protected $error;
-    /**
-     * @var int
-     */
-    protected $errno;
+    protected string $header_size;
 
-    /**
-     * @var string
-     */
-    public $http_code;
+    protected string $error;
 
-    /**
-     * @var mixed
-     */
-    public $debug;
+    protected int $errno;
 
-    /**
-     * @var bool
-     */
-    public $is_debug = FALSE;
+    public string $http_code;
 
-    /**
-     * @var mixed
-     */
-    const MIME_X_WWW_FORM   = 'application/x-www-form-urlencoded';
-    const MIME_FORM_DATA    = 'multipart/form-data';
-    const MIME_JSON         = 'application/json';
-    const MIME_XML          = 'application/xml';
-    const MIME_BINARY       = 'application/binary';
+    public mixed $debug;
 
+    public bool $is_debug = FALSE;
 
     public function __construct()
     {
         $this->ch = curl_init();
     }
 
-    /**
-     * @param string $url
-     * @return $this
-     */
-    public function setUrl($url): object
+    public function setUrl(string $url): void
     {
         $this->url = $url;
-        return $this;
     }
 
-    /**
-     * @param string $mime
-     * @return $this
-     */
-    public function setMime($mime = null): object
+    public function setMime(string $mime = null): void
     {
         switch ($mime) {
             case 'form':
-                $this->mime =  self::MIME_X_WWW_FORM;
+            case 'x-www-form-urlencoded':
+                $this->mime =  $this->mime_type['MIME_X_WWW_FORM'];
                 break;
 
             case 'multipart':
-                $this->mime =  self::MIME_FORM_DATA;
+            case 'multipart/form-data':
+                $this->mime =  $this->mime_type['MIME_FORM_DATA'];
                 break;
 
             case 'json':
-                $this->mime =  self::MIME_JSON;
+                $this->mime =  $this->mime_type['MIME_JSON'];
                 break;
 
             case 'xml':
-                $this->mime =  self::MIME_XML;
+                $this->mime =  $this->mime_type['MIME_XML'];
                 break;
 
             case 'binary':
-                $this->mime =  self::MIME_BINARY;
+                $this->mime =  $this->mime_type['MIME_BINARY'];
                 break;
 
             default:
-                $this->mime =  self::MIME_JSON;
+                $this->mime =  $this->mime_type['MIME_JSON'];
                 break;
         }
-
-        return $this;
     }
 
-    /**
-     * @param string $utf8
-     * @return $this
-     */
-    public function setUtf8(): object
+    public function setUtf8(): void
     {
         $this->uf8 = TRUE;
-        return $this;
     }
 
-    /**
-     * @param array $data
-     * @param bool $parse : default TRUE
-     * @return $this
-     */
-    public function setHeaders($data, $parse = TRUE): object
+    public function setHeaders(array $data, bool $parse = TRUE): void
     {
         foreach ($data as $key => $val) {
             if ($parse) {
@@ -191,44 +116,23 @@ class CurlHelper
                 $this->headers[$key] = $val;
             }
         }
-        return $this;
     }
 
-    /**
-     * @param array $options
-     * @return $this
-     */
-    public function setOptions($options): object
+    public function setOptions(array $options): void
     {
         foreach ($options as $key => $value) {
             curl_setopt($this->ch, $key, $value);
         }
-
-        return $this;
     }
 
-    /**
-     * @param mixed $raw
-     * @return $this
-     */
-    public function setPostRaw($raw): object
+    public function setPostRaw(mixed $raw): void
     {
-        if (is_array($raw)) {
-            $raw = http_build_query($raw);
-        }
-
-        $this->post_raw = $raw;
-        return $this;
+        $this->post_raw = (is_array($raw)) ? http_build_query($raw) : $raw;
     }
 
-    /**
-     * @param array $data
-     * @return $this
-     */
-    public function setPostParams($data): object
+    public function setPostParams(array $data): void
     {
         $this->post_data = array_merge($this->post_data, $data);
-        return $this;
     }
 
     /**
@@ -236,7 +140,7 @@ class CurlHelper
      * @param bool $form
      * @return $this
      */
-    public function setPostFiles($files, $form = FALSE): object
+    public function setPostFiles(array $files, bool $form = FALSE): void
     {
         $c_files_array = array();
 
@@ -246,36 +150,24 @@ class CurlHelper
             $c_files_array = $this->prefabFiles($files, $c_files_array);
         }
 
-        return $this->setPostParams($c_files_array);
+        $this->setPostParams($c_files_array);
     }
 
-    /**
-     * @param array $data
-     * @return $this
-     */
-    public function setGetParams($data): object
+
+    public function setGetParams(array $data): void
     {
         $this->get_data = array_merge($this->get_data, $data);
-        return $this;
     }
 
-    /**
-     * @param array $data
-     * @return $this
-     */
-    public function setPutParams($data): object
+
+    public function setPutParams(array $data): void
     {
         $this->put_data = array_merge($this->put_data, $data);
-        return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function setDebug(): object
+    public function setDebug(): void
     {
         $this->is_debug = TRUE;
-        return $this;
     }
 
     /**
@@ -296,7 +188,7 @@ class CurlHelper
         if (!empty($this->post_data)) {
             curl_setopt($this->ch, CURLOPT_POST, TRUE);
 
-            if ($this->mime == self::MIME_JSON) {
+            if ($this->mime === $this->mime_type['MIME_JSON']) {
                 $this->post_data = json_encode($this->post_data);
             }
 
@@ -368,12 +260,12 @@ class CurlHelper
         return $this->http_code;
     }
 
-    public function debug(): ?array
+    public function debug(): array
     {
         return array("Debug" => $this->debug, "Error" => $this->error, "Errno" => $this->errno, "Out" => $this->sent, "Code" =>  $this->http_code, "Size" =>  $this->header_size);
     }
 
-    public function response($format = 'array'): ?array
+    public function response(string $format = 'array'): ?array
     {
         switch ($format) {
             case 'obj':
@@ -541,10 +433,6 @@ class CurlHelper
         return array($error, $msg);
     }
 
-
-    /**
-     * @return string
-     */
     protected function generateUrl(): string
     {
         $parsed_string = '';
@@ -594,10 +482,7 @@ class CurlHelper
         return $parsed_string;
     }
 
-    /**
-     * Fix strings to Mime-Type
-     * @return string
-     */
+    // - Fix strings to Mime-Type
     protected function parseMimeType(): string
     {
         $mime = ($this->utf8) ? $this->mime . "; charset=utf-8 ;" : $this->mime;
@@ -605,12 +490,8 @@ class CurlHelper
         return $mime;
     }
 
-    /**
-     * Fix strings to Proper-Case
-     * @param string $str
-     * @return string
-     */
-    protected function parseStringHeader($str): string
+    // - Fix strings to Proper-Case
+    protected function parseStringHeader(string $str): string
     {
         $str = explode('-', $str);
 
@@ -621,13 +502,9 @@ class CurlHelper
         return implode('-', $str);
     }
 
-    /**
-     * Prepare local file data to the CURLFile model.
-     * @param array $files
-     * @param array $c_files_array
-     * @return array
-     */
-    protected function prefabFiles($files, $c_files_array): array
+
+    // - Prepare local file data to the CURLFile model
+    protected function prefabFiles(array $files, array $c_files_array): array
     {
         if (!empty($files)) {
             foreach ($files as $key) {
@@ -642,13 +519,8 @@ class CurlHelper
         return $c_files_array;
     }
 
-    /**
-     * Prepare data from $_FILES to the CURLFile model  
-     * @param array $files
-     * @param array $c_files_array
-     * @return array
-     */
-    protected function prefabFromFiles($files, $c_files_array)
+    // - Prepare data from $_FILES to the CURLFile model
+    protected function prefabFromFiles(array $files, array $c_files_array)
     {
         if (!empty($files)) {
             for ($i = 0; $i < count($files['tmp_name']); $i++) {
