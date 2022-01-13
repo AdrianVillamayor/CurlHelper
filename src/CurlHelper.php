@@ -18,7 +18,7 @@ class CurlHelper
     public string $user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36';
 
     public int $timeout = 30;
-   
+
     /**
      * @var \CurlHandle
      */
@@ -45,6 +45,8 @@ class CurlHelper
     protected array $post_data = [];
 
     protected array $put_data = [];
+
+    protected array $delete_data = [];
 
     protected ?string $post_raw;
 
@@ -131,7 +133,10 @@ class CurlHelper
         }
     }
 
-    public function setPostRaw(mixed $raw): void
+    /**
+     * @param mixed $raw
+     */
+    public function setPostRaw($raw): void
     {
         $this->post_raw = (is_array($raw)) ? http_build_query($raw) : $raw;
     }
@@ -141,11 +146,6 @@ class CurlHelper
         $this->post_data = array_merge($this->post_data, $data);
     }
 
-    /**
-     * @param array $files
-     * @param bool $form
-     * @return $this
-     */
     public function setPostFiles(array $files, bool $form = FALSE): void
     {
         $c_files_array = array();
@@ -169,6 +169,11 @@ class CurlHelper
     public function setPutParams(array $data): void
     {
         $this->put_data = array_merge($this->put_data, $data);
+    }
+
+    public function setDeleteParams(array $data): void
+    {
+        $this->delete_data = array_merge($this->delete_data, $data);
     }
 
     public function setDebug(): void
@@ -211,7 +216,14 @@ class CurlHelper
         // - PUT
         elseif (!empty($this->put_data)) {
             curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->put_raw);
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($this->put_data));
+            $this->headers['Content-Type'] = $this->parseMimeType();
+        }
+
+        // - DELETE
+        elseif (!empty($this->delete_data)) {
+            curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, http_build_query($this->delete_data));
             $this->headers['Content-Type'] = $this->parseMimeType();
         }
 
