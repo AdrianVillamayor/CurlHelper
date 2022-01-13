@@ -22,7 +22,7 @@ class CurlHelper
     /**
      * @var \CurlHandle
      */
-    protected  $ch;
+    protected $ch;
 
     protected ?string $url;
 
@@ -50,7 +50,7 @@ class CurlHelper
 
     protected array $headers = [];
 
-    protected mixed $response;
+    protected $response;
 
     protected string $header_size;
 
@@ -60,7 +60,7 @@ class CurlHelper
 
     public string $http_code;
 
-    public mixed $debug;
+    public $debug;
 
     public bool $is_debug = FALSE;
 
