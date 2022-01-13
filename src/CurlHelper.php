@@ -65,6 +65,9 @@ class CurlHelper
 
     public int $http_code;
 
+     /**
+     * @var mixed
+     */
     public $debug;
 
     public bool $is_debug = FALSE;
