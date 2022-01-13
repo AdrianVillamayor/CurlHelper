@@ -50,15 +50,18 @@ class CurlHelper
 
     protected array $headers = [];
 
+    /**
+     * @var mixed
+     */
     protected $response;
 
-    protected string $header_size;
+    protected int $header_size;
 
     protected string $error;
 
     protected int $errno;
 
-    public string $http_code;
+    public int $http_code;
 
     public $debug;
 
@@ -256,7 +259,7 @@ class CurlHelper
         curl_close($this->ch);
     }
 
-    public function http_code(): string
+    public function http_code(): int
     {
         return $this->http_code;
     }
@@ -308,122 +311,122 @@ class CurlHelper
         $error = TRUE;
 
         switch ($this->http_code) {
-            case "100":
+            case 100:
                 $msg = 'Continue';
                 break;
-            case "101":
+            case 101:
                 $msg = 'Switching Protocols';
                 break;
-            case "200":
+            case 200:
                 $msg = 'OK';
                 $error  = FALSE;
                 break;
-            case "201":
+            case 201:
                 $msg = 'Created';
                 $error  = FALSE;
                 break;
-            case "202":
+            case 202:
                 $msg = 'Accepted';
                 $error  = FALSE;
                 break;
-            case "203":
+            case 203:
                 $msg = 'Non-Authoritative Information';
                 $error  = FALSE;
                 break;
-            case "204":
+            case 204:
                 $msg = 'No Content';
                 $error  = FALSE;
                 break;
-            case "205":
+            case 205:
                 $msg = 'Reset Content';
                 $error  = FALSE;
                 break;
-            case "206":
+            case 206:
                 $msg = 'Partial Content';
                 $error  = FALSE;
                 break;
-            case "300":
+            case 300:
                 $msg = 'Multiple Choices';
                 break;
-            case "301":
+            case 301:
                 $msg = 'Moved Permanently';
                 break;
-            case "302":
+            case 302:
                 $msg = 'Moved Temporarily';
                 break;
-            case "303":
+            case 303:
                 $msg = 'See Other';
                 break;
-            case "304":
+            case 304:
                 $msg = 'Not Modified';
                 break;
-            case "305":
+            case 305:
                 $msg = 'Use Proxy';
                 break;
-            case "400":
+            case 400:
                 $msg = 'Bad Request';
                 break;
-            case "401":
+            case 401:
                 $msg = 'Unauthorized';
                 break;
-            case "402":
+            case 402:
                 $msg = 'Payment Required';
                 break;
-            case "403":
+            case 403:
                 $msg = 'Forbidden';
                 break;
-            case "404":
+            case 404:
                 $msg = 'Not Found';
                 break;
-            case "405":
+            case 405:
                 $msg = 'Method Not Allowed';
                 break;
-            case "406":
+            case 406:
                 $msg = 'Not Acceptable';
                 break;
-            case "407":
+            case 407:
                 $msg = 'Proxy Authentication Required';
                 break;
-            case "408":
+            case 408:
                 $msg = 'Request Time-out';
                 break;
-            case "409":
+            case 409:
                 $msg = 'Conflict';
                 break;
-            case "410":
+            case 410:
                 $msg = 'Gone';
                 break;
-            case "411":
+            case 411:
                 $msg = 'Length Required';
                 break;
-            case "412":
+            case 412:
                 $msg = 'Precondition Failed';
                 break;
-            case "413":
+            case 413:
                 $msg = 'Request Entity Too Large';
                 break;
-            case "414":
+            case 414:
                 $msg = 'Request-URI Too Large';
                 break;
-            case "415":
+            case 415:
                 $msg = 'Unsupported Media Type';
                 break;
-            case "500":
+            case 500:
                 $msg = 'Internal Server Error';
                 break;
-            case "501":
+            case 501:
                 $msg = 'Not Implemented';
                 break;
-            case "502":
+            case 502:
                 $msg = 'Bad Gateway';
                 break;
-            case "503":
+            case 503:
                 $msg = 'Service Unavailable';
                 break;
-            case "504":
+            case 504:
                 $msg = 'Gateway Time-out';
                 break;
-            case "505":
+            case 505:
                 $msg = 'HTTP Version not supported';
                 break;
             default:
