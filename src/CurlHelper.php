@@ -65,7 +65,7 @@ class CurlHelper
 
     public int $http_code;
 
-     /**
+    /**
      * @var mixed
      */
     public $debug;
@@ -234,6 +234,8 @@ class CurlHelper
         elseif (!empty($this->get_data)) {
             curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");
             $this->url = sprintf("%s?%s", $this->url, http_build_query($this->get_data));
+        } else {
+            curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, "GET");;
         }
 
         $url = $this->generateUrl();
