@@ -17,14 +17,12 @@
         "ext-curl": "*"
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "./vendor/bin/phpunit",
         "test-curl": "phpunit test/CurlHelperTest.php"
     },
     "minimum-stability": "dev",
     "require-dev": {
         "ext-curl": "*",
-		"ext-dom": "*",
-		"ext-json": "*",
         "phpunit/phpunit": "9.5.x-dev"
     }
 }
