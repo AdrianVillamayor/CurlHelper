@@ -48,7 +48,7 @@ final class CurlHelperTest extends TestCase
 
         $curl->setUrl($url);
 
-        $curl->setPostParams([
+        $curl->setGetParams([
             "name"  => "Morpheus",
             "job"   => "Leader"
         ]);
