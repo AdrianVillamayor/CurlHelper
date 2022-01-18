@@ -2,6 +2,7 @@
 
 *By [Adrii](https://github.com/AdrianVillamayor)*
 
+[![Test](https://github.com/AdrianVillamayor/CurlHelper/actions/workflows/php.yml/badge.svg)](https://github.com/AdrianVillamayor/CurlHelper/actions/workflows/php.yml)
 [![Latest Stable Version](http://img.shields.io/packagist/v/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
 [![Total Downloads](http://img.shields.io/packagist/dt/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
 [![License](http://img.shields.io/packagist/l/adrii/curl-helper.svg)](https://packagist.org/packages/adrii/curl-helper)
