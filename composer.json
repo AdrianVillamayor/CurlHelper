@@ -22,7 +22,6 @@
     },
     "minimum-stability": "dev",
     "require-dev": {
-        "ext-curl": "*",
         "phpunit/phpunit": "9.5.x-dev"
     }
 }
