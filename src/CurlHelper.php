@@ -19,9 +19,6 @@ class CurlHelper
 
     public int $timeout = 30;
 
-    /**
-     * @var \CurlHandle
-     */
     protected $ch;
 
     protected ?string $url;
