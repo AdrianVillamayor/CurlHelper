@@ -59,6 +59,8 @@ class CurlHelper
 
     protected int $header_size;
 
+    protected ?string $sent;
+
     protected string $error;
 
     protected int $errno;
@@ -115,7 +117,7 @@ class CurlHelper
 
     public function setUtf8(): void
     {
-        $this->uf8 = TRUE;
+        $this->utf8 = TRUE;
     }
 
     public function setHeaders(array $data, bool $parse = TRUE): void
