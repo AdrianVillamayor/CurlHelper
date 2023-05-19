@@ -59,7 +59,10 @@ class CurlHelper
 
     protected int $header_size;
 
-    protected ?string $sent;
+    /**
+     * @var mixed
+     */
+    protected $sent;
 
     protected string $error;
 
