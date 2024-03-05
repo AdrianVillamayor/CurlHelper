@@ -125,7 +125,22 @@ class CurlHelper
      */
     public function setMime(string $mime = null): void
     {
-        $this->mime = $this->mime_type[$mime] ?? $this->mime_type['MIME_JSON'];
+        // Mapping of shortcut keys to their corresponding MIME types
+        $mimeShortcuts = [
+            'form'                      => 'MIME_X_WWW_FORM',
+            'x-www-form-urlencoded'     => 'MIME_X_WWW_FORM',
+            'multipart'                 => 'MIME_FORM_DATA',
+            'multipart/form-data'       => 'MIME_FORM_DATA',
+            'json'                      => 'MIME_JSON',
+            'xml'                       => 'MIME_XML',
+            'binary'                    => 'MIME_BINARY'
+        ];
+
+        // Use the shortcut if available, or default to the provided $mime
+        $key = $mimeShortcuts[$mime] ?? $mime;
+
+        // Set the MIME type if the key exists, default to MIME_JSON otherwise
+        $this->mime = $this->mime_type[$key] ?? $this->mime_type['MIME_JSON'];
     }
 
     /**
@@ -401,7 +416,7 @@ class CurlHelper
         // Default to GET if no other method is determined
         return 'GET';
     }
-    
+
     /**
      * Prepares the data for a POST request.
      * Sets the request method to POST and formats the data based on its type (raw or structured).
