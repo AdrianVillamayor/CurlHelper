@@ -1,27 +1,49 @@
 {
     "name": "adrii/curl-helper",
-    "description": "A simple class that helps to organize and have a standard when creating new projects.",
+    "description": "CurlHelper is a streamlined PHP utility for easy cURL usage, supporting GET, POST, PUT, and DELETE methods. It simplifies HTTP requests by offering straightforward options and header settings, making web API interactions more accessible and efficient.",
     "type": "library",
     "license": "MIT",
-    "authors": [{
-        "name": "Adrian",
-        "email": "adrian.villamayor@gmail.com"
-    }],
+    "homepage": "https://github.com/AdrianVillamayor/CurlHelper",
+    "keywords": [
+        "curl",
+        "http",
+        "api",
+        "http client",
+        "curl wrapper"
+    ],
+    "authors": [
+        {
+            "name": "Adrian Villamayor",
+            "email": "adrian.villamayor@gmail.com",
+            "homepage": "https://github.com/AdrianVillamayor",
+            "role": "Developer"
+        }
+    ],
     "autoload": {
         "psr-4": {
-            "Adrii\\": "src/"
+            "Adrii\\CurlHelper\\": "src/"
         }
     },
     "require": {
-        "php": ">=7.4",
+        "php": "^7.4 || ^8.0",
         "ext-curl": "*"
     },
-    "scripts": {
-        "test": "./vendor/bin/phpunit",
-        "test-curl": "phpunit test/CurlHelperTest.php"
-    },
-    "minimum-stability": "dev",
     "require-dev": {
-        "phpunit/phpunit": "9.6.x-dev"
-    }
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "phpunit --colors=always",
+        "test-specific": "phpunit --filter"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "support": {
+        "issues": "https://github.com/AdrianVillamayor/CurlHelper/issues",
+        "source": "https://github.com/AdrianVillamayor/CurlHelper"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
