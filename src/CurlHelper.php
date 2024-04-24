@@ -282,10 +282,9 @@ class CurlHelper
             $this->prepareRequest();
             $this->setCurlOptions();
             $this->response = curl_exec($this->ch);
-
-            if ($this->response === false) {
-                throw new \Exception(curl_error($this->ch), curl_errno($this->ch));
-            }
+            
+            $this->error = curl_error($this->ch);
+            $this->errno = curl_errno($this->ch);
 
             $this->postExecution();
         } finally {
