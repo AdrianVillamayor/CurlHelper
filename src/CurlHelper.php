@@ -645,8 +645,6 @@ class CurlHelper
         if (!empty($url['query'])) {
             parse_str($url['query'], $get_data);
             $url['query'] = http_build_query(array_merge($get_data, $this->get_data));
-        } else {
-            $url['query'] = http_build_query($this->get_data);
         }
 
         if (isset($url['scheme'])) {
